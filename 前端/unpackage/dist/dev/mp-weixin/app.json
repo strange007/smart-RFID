@@ -1,0 +1,17 @@
+{
+  "pages": [
+    "pages/detail/detail",
+    "pages/LineChartTemp/LineChartTemp",
+    "pages/LineChartHumi/LineChartHumi",
+    "pages/LineChartSmog/LineChartSmog"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "lazyCodeLoading": "requiredComponents",
+  "usingComponents": {}
+}

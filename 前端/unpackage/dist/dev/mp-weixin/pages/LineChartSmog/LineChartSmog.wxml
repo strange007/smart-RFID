@@ -1,0 +1,1 @@
+<view class="container"><view data-event-opts="{{[['touchmove',[['viewHistoryData',['$event']]]]]}}" class="charts-box" bindtouchmove="__e"><qiun-data-charts vue-id="fca60374-1" type="line" opts="{{opts}}" chartData="{{chartData}}" ontouch="{{true}}" bind:__l="__l"></qiun-data-charts></view></view>

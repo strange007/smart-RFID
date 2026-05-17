@@ -1,0 +1,123 @@
+#include "stm32f10x.h"                  // Device header
+#include "Flash.h"
+//  Attention: flash擦写次数为10万次，故不可在死循环中反复调用flash函数  //
+
+/**
+  * @brief   flash写入数据
+  * @param   add 32位flash地址
+  * @param	 dat 16位数据
+  * @retval  无
+  */
+void FLASH_W(uint32_t add, uint8_t dat1, uint8_t dat2, uint8_t dat3, uint8_t dat4)
+{
+    FLASH_Unlock(); //解锁FLASH编程擦除控制器
+    FLASH_ClearFlag(FLASH_FLAG_BSY | FLASH_FLAG_EOP | FLASH_FLAG_PGERR | FLASH_FLAG_WRPRTERR); //清除标志位
+    FLASH_ErasePage(add);    //擦除指定地址页
+    FLASH_ProgramHalfWord(add, dat1); //从指定页的addr地址开始写
+    FLASH_ProgramHalfWord(add + 2, dat2);
+    FLASH_ProgramHalfWord(add + 4, dat3);
+    FLASH_ProgramHalfWord(add + 6, dat4);
+    FLASH_ClearFlag(FLASH_FLAG_BSY | FLASH_FLAG_EOP | FLASH_FLAG_PGERR | FLASH_FLAG_WRPRTERR); //清除标志位
+    FLASH_Lock();    //锁定FLASH编程擦除控制器
+}
+
+/**
+  * @brief   flash写入数据
+  * @param   add 32位flash地址
+  * @param	 dat 16位数据，合计64位卡号，number数量
+  * @retval  无
+  */
+void FLASH_W3(uint32_t add, uint8_t dat1, uint8_t dat2, uint8_t dat3, uint8_t dat4, uint8_t number)
+{
+    FLASH_Unlock(); //解锁FLASH编程擦除控制器
+    FLASH_ClearFlag(FLASH_FLAG_BSY | FLASH_FLAG_EOP | FLASH_FLAG_PGERR | FLASH_FLAG_WRPRTERR); //清除标志位
+    FLASH_ErasePage(add);    //擦除指定地址页
+    FLASH_ProgramHalfWord(add, dat1); //从指定页的addr地址开始写
+    FLASH_ProgramHalfWord(add + 2, dat2);
+    FLASH_ProgramHalfWord(add + 4, dat3);
+    FLASH_ProgramHalfWord(add + 6, dat4);
+    FLASH_ProgramHalfWord(add + 8, number);
+    FLASH_ClearFlag(FLASH_FLAG_BSY | FLASH_FLAG_EOP | FLASH_FLAG_PGERR | FLASH_FLAG_WRPRTERR); //清除标志位
+    FLASH_Lock();    //锁定FLASH编程擦除控制器
+}
+
+/**
+  * @brief   flash写入数据
+  * @param   add 32位flash地址
+  * @param	 dat 16位数组，合计12个字节卡号
+  * @retval  无
+  */
+void FLASH_W4(uint32_t add, u8* dat)
+{
+    FLASH_Unlock(); //解锁FLASH编程擦除控制器
+    FLASH_ClearFlag(FLASH_FLAG_BSY | FLASH_FLAG_EOP | FLASH_FLAG_PGERR | FLASH_FLAG_WRPRTERR); //清除标志位
+    FLASH_ErasePage(add);    //擦除指定地址页
+    FLASH_ProgramHalfWord(add, dat[0]); //从指定页的addr地址开始写
+    FLASH_ProgramHalfWord(add + 2, dat[1]);
+    FLASH_ProgramHalfWord(add + 4, dat[2]);
+    FLASH_ProgramHalfWord(add + 6, dat[3]);
+    FLASH_ProgramHalfWord(add + 8, dat[4]);
+    FLASH_ProgramHalfWord(add + 10, dat[5]);
+    FLASH_ProgramHalfWord(add + 12, dat[6]);
+    FLASH_ProgramHalfWord(add + 14, dat[7]);
+    FLASH_ProgramHalfWord(add + 16, dat[8]);
+    FLASH_ProgramHalfWord(add + 18, dat[9]);
+    FLASH_ProgramHalfWord(add + 20, dat[10]);
+    FLASH_ProgramHalfWord(add + 22, dat[11]);
+    FLASH_ClearFlag(FLASH_FLAG_BSY | FLASH_FLAG_EOP | FLASH_FLAG_PGERR | FLASH_FLAG_WRPRTERR); //清除标志位
+    FLASH_Lock();    //锁定FLASH编程擦除控制器
+}
+
+/**
+  * @brief   flash写入数据
+  * @param   add 32位flash地址
+  * @param	 dat 16位数据
+  * @retval  无
+  */
+void FLASH_W2(uint32_t add, uint8_t dat)
+{
+    FLASH_Unlock(); //解锁FLASH编程擦除控制器
+    FLASH_ClearFlag(FLASH_FLAG_BSY | FLASH_FLAG_EOP | FLASH_FLAG_PGERR | FLASH_FLAG_WRPRTERR); //清除标志位
+    FLASH_ErasePage(add);    //擦除指定地址页
+    FLASH_ProgramHalfWord(add, dat); //从指定页的addr地址开始写
+    FLASH_ClearFlag(FLASH_FLAG_BSY | FLASH_FLAG_EOP | FLASH_FLAG_PGERR | FLASH_FLAG_WRPRTERR); //清除标志位
+    FLASH_Lock();    //锁定FLASH编程擦除控制器
+}
+
+/**
+  * @brief    FLASH读出数据
+  * @param    add 32位读出FLASH地址
+  * @retval   16位数据
+  */
+uint16_t FLASH_R(uint32_t add)
+{
+    uint16_t a;
+    a = *(uint16_t*)add;
+    return a;
+}
+
+/**
+  * @brief    FLASH读出数据
+  * @param    add 32位读出FLASH地址
+  * @retval   8位数据
+  */
+uint8_t FLASH_R2(uint32_t add)
+{
+    uint8_t a;
+    a = *(uint8_t*)add;
+    return a;
+}
+
+/**
+  * @brief    擦除指定FLASH地址页内的内容
+  * @param    add 32位FLASH地址
+  * @retval   无
+  */
+void FLASH_Clear(uint32_t add)
+{
+    FLASH_Unlock(); //解锁FLASH编程擦除控制器
+    FLASH_ClearFlag(FLASH_FLAG_BSY | FLASH_FLAG_EOP | FLASH_FLAG_PGERR | FLASH_FLAG_WRPRTERR); //清除标志位
+    FLASH_ErasePage(add);    //擦除指定地址页
+    FLASH_ClearFlag(FLASH_FLAG_BSY | FLASH_FLAG_EOP | FLASH_FLAG_PGERR | FLASH_FLAG_WRPRTERR); //清除标志位
+    FLASH_Lock();
+}

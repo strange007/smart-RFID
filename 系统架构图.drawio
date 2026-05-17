@@ -1,0 +1,105 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.0.3 Chrome/140.0.7339.249 Electron/38.7.0 Safari/537.36" version="29.0.3">
+  <diagram name="第 1 页" id="eIBCtMzw3kQobHbcPea5">
+    <mxGraphModel dx="1626" dy="1081" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="comm" value="通信层" style="text;html=1;strokeColor=#4C20DF;fillColor=#dae8fc;align=center;verticalAlign=top;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=20;fontFamily=Helvetica;opacity=10;" parent="1" vertex="1">
+          <mxGeometry x="500" y="20" width="270" height="600" as="geometry" />
+        </mxCell>
+        <mxCell id="hw" value="硬件层" style="text;html=1;strokeColor=#9673a6;fillColor=#e1d5e7;align=center;verticalAlign=top;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=20;opacity=10;perimeterSpacing=5;strokeWidth=5;" parent="1" vertex="1">
+          <mxGeometry x="50" y="20" width="450" height="600" as="geometry" />
+        </mxCell>
+        <mxCell id="be" value="后端层" style="text;html=1;strokeColor=#82b366;fillColor=#768076;align=center;verticalAlign=top;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=20;fontFamily=Helvetica;opacity=10;" parent="1" vertex="1">
+          <mxGeometry x="770" y="20" width="230" height="600" as="geometry" />
+        </mxCell>
+        <mxCell id="fe" value="前端层" style="text;html=1;strokeColor=#6F0000;fillColor=#a20025;align=center;verticalAlign=top;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=20;fontFamily=Helvetica;fontColor=#000000;opacity=10;" parent="1" vertex="1">
+          <mxGeometry x="1000" y="20" width="350" height="600" as="geometry" />
+        </mxCell>
+        <mxCell id="stm32" value="STM32F103&lt;br&gt;微控制器" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="80" y="280" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="rfid" value="RFID&lt;br&gt;读写器" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="80" y="140" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="tag" value="RFID 标签&lt;br&gt;(资产)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="80" y="40" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="esp8266" value="ESP8266&lt;br&gt;WiFi模块" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b0e0e6;strokeColor=#5b768a;" parent="1" vertex="1">
+          <mxGeometry x="80" y="420" width="140" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="oled" value="OLED&lt;br&gt;显示屏" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="340" y="280" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="mqtt" value="Mosquitto&lt;br&gt;MQTT Broker&lt;br&gt;(127.0.0.1:1883)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6d0e6;strokeColor=#964c96;gradientColor=#d5a2d5;" parent="1" vertex="1">
+          <mxGeometry x="540" y="410" width="160" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="nodejs" value="Node.js 后端&lt;br&gt;(Express + MQTT.js)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d4edda;strokeColor=#28a745;" parent="1" vertex="1">
+          <mxGeometry x="800" y="320" width="160" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="mysql" value="MySQL&lt;br&gt;数据库&lt;br&gt;(asset表)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="820" y="530" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="frontend" value="uni-app 前端&lt;br&gt;(Vue.js)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1ecf1;strokeColor=#0c5460;" parent="1" vertex="1">
+          <mxGeometry x="1060" y="320" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="user" value="用户" style="shape=actor;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="1270" y="320" width="60" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" value="射频信号" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;orthogonalLoop=1;strokeColor=#333;" parent="1" source="tag" target="rfid" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="UART串口" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;orthogonalLoop=1;strokeColor=#333;" parent="1" source="rfid" target="stm32" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="UART串口" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;orthogonalLoop=1;strokeColor=#333;" parent="1" source="stm32" target="esp8266" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" value="I2C/SPI" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;orthogonalLoop=1;strokeColor=#333;" parent="1" source="stm32" target="oled" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" value="MQTT Publish&lt;br&gt;asset/post" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;orthogonalLoop=1;strokeColor=#cc0000;" parent="1" source="esp8266" target="mqtt" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="380" y="510" />
+              <mxPoint x="380" y="510" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e6" value="MQTT Subscribe&lt;br&gt;asset/post" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;orthogonalLoop=1;strokeColor=#0066cc;" parent="1" source="mqtt" target="nodejs" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="620" y="360" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e7" value="MQTT Publish&lt;br&gt;asset/command" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;orthogonalLoop=1;strokeColor=#ff6600;" parent="1" source="mqtt" target="esp8266" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="380" y="450" />
+              <mxPoint x="380" y="450" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e8" value="SQL查询" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;orthogonalLoop=1;strokeColor=#333;" parent="1" source="nodejs" target="mysql" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="880" y="480" />
+              <mxPoint x="880" y="480" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e9" value="HTTP REST API&lt;br&gt;(localhost:3000)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;orthogonalLoop=1;strokeColor=#333;" parent="1" source="nodejs" target="frontend" edge="1">
+          <mxGeometry y="-30" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e10" value="UI交互" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;orthogonalLoop=1;strokeColor=#333;" parent="1" source="frontend" target="user" edge="1">
+          <mxGeometry x="0.1429" y="20" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
