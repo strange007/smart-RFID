@@ -29,4 +29,9 @@ void WIFI_W(uint32_t add1, uint32_t add2, char* SSID, char* PWD);
 
 void WIFI_R(uint32_t add1, uint32_t add2);
 
+/* ADD BEGIN - 手持化改造：WiFi 连接与状态检查 */
+void ESP8266_ConnectToAP(void);          /* 连接预设热点（从FLASH读取配置） */
+uint8_t ESP8266_IsConnected(void);       /* 检查 WiFi 是否已连接 */
+/* ADD END */
+
 #endif
