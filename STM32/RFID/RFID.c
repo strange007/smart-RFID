@@ -12,6 +12,21 @@ int8_t RSSI = 0;
 
 TagNode tagCache[TAG_CACHE_SIZE];
 
+// 动态轮询参数（按现场读卡节奏可调）
+#define RFID_POLL_MIN_MS      30        // 最快30ms一次
+#define RFID_POLL_MAX_MS      300       // 最慢300ms一次
+#define RFID_POLL_STEP_MS     20        // 每次调整20ms
+#define RFID_POLL_HIT_STREAK  2         // 连续命中多少次就加速
+#define RFID_POLL_MISS_STREAK 3         // 连续未命中多少次就减速
+#define RFID_POLL_INIT_MS     80        // 初始轮询间隔80ms
+
+// 动态轮询状态
+static uint32_t rfid_poll_interval_ms = RFID_POLL_INIT_MS;// 当前轮询间隔
+static uint32_t rfid_last_poll_tick = 0;// 上次发送轮询命令的时间
+static uint32_t rfid_last_hit_tick = 0;// 上次成功读到标签的时间
+static uint8_t rfid_hit_streak = 0;// 连续命中计数
+static uint8_t rfid_miss_streak = 0;// 连续未命中计数
+
 //判断标签是否短时间重复读取
 uint8_t RFID_CheckDuplicate(uint8_t *epc, int8_t rssi)
 {
@@ -201,6 +216,35 @@ void Serial_SendNumber(uint32_t Number, uint8_t Length)
   */
 void RFID_SearchOnce(void)
 {
+    uint32_t now = GetTick();//获取当前时间戳
+
+    // 时间闸门：不到间隔就不发命令
+    if ((uint32_t)(now - rfid_last_poll_tick) < rfid_poll_interval_ms)
+    {
+        return;
+    }
+
+    // 超过一个周期未命中，则累计 miss，达到阈值就放慢
+    if ((uint32_t)(now - rfid_last_hit_tick) > rfid_poll_interval_ms)
+    {
+        if (rfid_miss_streak < RFID_POLL_MISS_STREAK) {// 累计 miss
+            rfid_miss_streak++;
+        }
+        rfid_hit_streak = 0;// 重置命中计数
+
+        if (rfid_miss_streak >= RFID_POLL_MISS_STREAK && rfid_poll_interval_ms < RFID_POLL_MAX_MS)// 达到miss阈值，且未达最大间隔，则放慢
+        {
+            rfid_poll_interval_ms += RFID_POLL_STEP_MS;// 增加间隔
+            if (rfid_poll_interval_ms > RFID_POLL_MAX_MS)// 不超过最大间隔
+            {
+                rfid_poll_interval_ms = RFID_POLL_MAX_MS;// 设置为最大间隔
+            }
+            rfid_miss_streak = 0;// 重置未命中计数
+        }
+    }
+
+    rfid_last_poll_tick = now;// 更新上次轮询时间
+
     Serial_SendByte(0xBB);
     u8 temp[5] = {0x00, 0x22, 0x00, 0x00, 0x22};
     Serial_SendArray(temp, 5);
@@ -247,6 +291,26 @@ u8 RFID_Unpacket(void)
             RFIDCard[i] = RFID_buf[i + 8];
         }
         RSSI = RFID_buf[5];
+
+        // 命中一次，提速
+        rfid_last_hit_tick = GetTick();// 更新上次命中时间
+        if (rfid_hit_streak < RFID_POLL_HIT_STREAK)// 累计 hit
+        {
+            rfid_hit_streak++;
+        }
+        rfid_miss_streak = 0;// 重置未命中计数
+        if (rfid_hit_streak >= RFID_POLL_HIT_STREAK && rfid_poll_interval_ms > RFID_POLL_MIN_MS)// 达到hit阈值，且未达最小间隔，则加速
+        {
+            if (rfid_poll_interval_ms > RFID_POLL_MIN_MS + RFID_POLL_STEP_MS)// 判断减去一步后会不会低于最小间隔
+            {
+                rfid_poll_interval_ms -= RFID_POLL_STEP_MS;// 减少间隔
+            }
+            else
+            {
+                rfid_poll_interval_ms = RFID_POLL_MIN_MS;// 设置为最小间隔
+            }
+            rfid_hit_streak = 0;// 重置命中计数
+        }
         RFID_Clear();
         return 1;
     }

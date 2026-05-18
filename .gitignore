@@ -1,0 +1,5 @@
+# VS Code / Keil Assistant temp files
+STM32/.vscode/keil-assistant.log
+STM32/.vscode/uv4.log.lock
+STM32/.vscode/c_cpp_properties.json
+.vscode/c_cpp_properties.json
