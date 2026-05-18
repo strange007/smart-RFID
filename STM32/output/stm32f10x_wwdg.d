@@ -2,7 +2,7 @@
 .\output\stm32f10x_wwdg.o: .\fwlib\inc\stm32f10x_wwdg.h
 .\output\stm32f10x_wwdg.o: .\core\stm32f10x.h
 .\output\stm32f10x_wwdg.o: .\core\core_cm3.h
-.\output\stm32f10x_wwdg.o: F:\keil5\ARM\ARMCC\Bin\..\include\stdint.h
+.\output\stm32f10x_wwdg.o: D:\keil\Keil MDK\core\ARM\ARMCC\Bin\..\include\stdint.h
 .\output\stm32f10x_wwdg.o: .\core\system_stm32f10x.h
 .\output\stm32f10x_wwdg.o: .\core\stm32f10x_conf.h
 .\output\stm32f10x_wwdg.o: .\fwlib\inc\stm32f10x_adc.h

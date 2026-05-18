@@ -2,7 +2,7 @@
 .\output\stm32f10x_flash.o: .\fwlib\inc\stm32f10x_flash.h
 .\output\stm32f10x_flash.o: .\core\stm32f10x.h
 .\output\stm32f10x_flash.o: .\core\core_cm3.h
-.\output\stm32f10x_flash.o: F:\keil5\ARM\ARMCC\Bin\..\include\stdint.h
+.\output\stm32f10x_flash.o: D:\keil\Keil MDK\core\ARM\ARMCC\Bin\..\include\stdint.h
 .\output\stm32f10x_flash.o: .\core\system_stm32f10x.h
 .\output\stm32f10x_flash.o: .\core\stm32f10x_conf.h
 .\output\stm32f10x_flash.o: .\fwlib\inc\stm32f10x_adc.h

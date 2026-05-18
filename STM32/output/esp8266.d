@@ -1,7 +1,7 @@
 .\output\esp8266.o: NET\device\src\esp8266.c
 .\output\esp8266.o: .\core\stm32f10x.h
 .\output\esp8266.o: .\core\core_cm3.h
-.\output\esp8266.o: F:\keil5\ARM\ARMCC\Bin\..\include\stdint.h
+.\output\esp8266.o: D:\keil\Keil MDK\core\ARM\ARMCC\Bin\..\include\stdint.h
 .\output\esp8266.o: .\core\system_stm32f10x.h
 .\output\esp8266.o: .\core\stm32f10x_conf.h
 .\output\esp8266.o: .\fwlib\inc\stm32f10x_adc.h
@@ -33,5 +33,5 @@
 .\output\esp8266.o: .\OLED\oled.h
 .\output\esp8266.o: .\system\timer.h
 .\output\esp8266.o: .\hardware\inc\delay.h
-.\output\esp8266.o: F:\keil5\ARM\ARMCC\Bin\..\include\string.h
-.\output\esp8266.o: F:\keil5\ARM\ARMCC\Bin\..\include\stdio.h
+.\output\esp8266.o: D:\keil\Keil MDK\core\ARM\ARMCC\Bin\..\include\string.h
+.\output\esp8266.o: D:\keil\Keil MDK\core\ARM\ARMCC\Bin\..\include\stdio.h

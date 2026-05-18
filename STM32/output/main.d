@@ -1,7 +1,7 @@
 .\output\main.o: user\main.c
 .\output\main.o: .\core\stm32f10x.h
 .\output\main.o: .\core\core_cm3.h
-.\output\main.o: F:\keil5\ARM\ARMCC\Bin\..\include\stdint.h
+.\output\main.o: D:\keil\Keil MDK\core\ARM\ARMCC\Bin\..\include\stdint.h
 .\output\main.o: .\core\system_stm32f10x.h
 .\output\main.o: .\core\stm32f10x_conf.h
 .\output\main.o: .\fwlib\inc\stm32f10x_adc.h
@@ -29,7 +29,7 @@
 .\output\main.o: .\fwlib\inc\stm32f10x_wwdg.h
 .\output\main.o: .\fwlib\inc\misc.h
 .\output\main.o: .\NET\Broker\inc\Broker.h
-.\output\main.o: F:\keil5\ARM\ARMCC\Bin\..\include\stdio.h
+.\output\main.o: D:\keil\Keil MDK\core\ARM\ARMCC\Bin\..\include\stdio.h
 .\output\main.o: .\NET\device\inc\esp8266.h
 .\output\main.o: .\hardware\inc\delay.h
 .\output\main.o: .\hardware\inc\usart.h
@@ -37,5 +37,5 @@
 .\output\main.o: .\system\Timer.h
 .\output\main.o: .\system\Flash.h
 .\output\main.o: .\RFID\RFID.h
-.\output\main.o: F:\keil5\ARM\ARMCC\Bin\..\include\string.h
+.\output\main.o: D:\keil\Keil MDK\core\ARM\ARMCC\Bin\..\include\string.h
 .\output\main.o: user\Object.h

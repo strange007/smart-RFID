@@ -2,7 +2,7 @@
 .\output\stm32f10x_sdio.o: .\fwlib\inc\stm32f10x_sdio.h
 .\output\stm32f10x_sdio.o: .\core\stm32f10x.h
 .\output\stm32f10x_sdio.o: .\core\core_cm3.h
-.\output\stm32f10x_sdio.o: F:\keil5\ARM\ARMCC\Bin\..\include\stdint.h
+.\output\stm32f10x_sdio.o: D:\keil\Keil MDK\core\ARM\ARMCC\Bin\..\include\stdint.h
 .\output\stm32f10x_sdio.o: .\core\system_stm32f10x.h
 .\output\stm32f10x_sdio.o: .\core\stm32f10x_conf.h
 .\output\stm32f10x_sdio.o: .\fwlib\inc\stm32f10x_adc.h
