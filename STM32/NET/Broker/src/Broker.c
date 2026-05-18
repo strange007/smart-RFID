@@ -32,7 +32,10 @@ u8 respond = 0;
 extern Send_Setting send_settting;
 extern int flash_w_flag;
 extern int8_t RSSI;
-extern volatile int disconnect;
+/*  ADD BEGIN - 优化后的心跳与断线计数 */
+//extern volatile int disconnect;
+extern volatile int lost_heartbeat;   
+/* ADD END */
 extern volatile u8 search;
 extern volatile uint8_t clear_from ;
 extern volatile uint8_t clear_to   ;
@@ -406,10 +409,18 @@ void Broker_RevPro(unsigned char *cmd)
                 UsartPrintf(USART_DEBUG, "Tips:	MQTT Subscribe Err\r\n");
             break;
 
-        case MQTT_PKT_PINGRESP:																//发送ping消息的Ack
+        /*ADD BRGIN*/
+        /*case MQTT_PKT_PINGRESP:																//发送ping消息的Ack
             disconnect--;
             UsartPrintf(USART_DEBUG, "Tips:	MQTT ping OK\r\n");
+            break;*/
+        case MQTT_PKT_PINGRESP:                                                             /* 发送ping消息的Ack */
+            /* ADD BEGIN - 重置心跳丢失计数 */
+            lost_heartbeat = 0;
+            /* ADD END */
+            UsartPrintf(USART_DEBUG, "Tips:	MQTT ping OK\r\n");
             break;
+        /*ADD END*/
 
         default:
             result = -1;
@@ -422,3 +433,25 @@ void Broker_RevPro(unsigned char *cmd)
         return;
 
 }
+
+/* ADD BEGIN - 应用层保活消息 */
+/**
+  * @brief   发送应用层保活消息，防止手机热点 NAT 超时导致 MQTT 连接断开
+  * @param   无
+  * @retval  无
+  * @note    发送空 JSON {} 到 asset/keepalive 主题，后端可忽略
+  */
+void Broker_SendKeepAlive(void)
+{
+    MQTT_PACKET_STRUCTURE mqttPacket = { NULL, 0, 0, 0 };
+    const char* topic = "asset/keepalive";
+    const char* msg = "{}";
+
+    if (MQTT_PacketPublish(MQTT_PUBLISH_ID, topic, msg, strlen(msg),
+        MQTT_QOS_LEVEL0, 0, 1, &mqttPacket) == 0) {
+        ESP8266_SendData(mqttPacket._data, mqttPacket._len);
+        MQTT_DeleteBuffer(&mqttPacket);
+        UsartPrintf(USART_DEBUG, "Sent KeepAlive\n");
+    }
+}
+/* ADD END */

@@ -12,4 +12,8 @@ void Broker_RevPro(unsigned char *cmd);
 
 void Broker_Ping(void);
 
+/*ADD BEGIN*/
+void Broker_SendKeepAlive(void);   /* 应用层保活 */
+/*ADD END*/
+
 #endif

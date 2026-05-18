@@ -34,8 +34,24 @@ int flash_w_flag = -1;
 extern u8 RFID_buf[512];
 extern int8_t RSSI;
 
+
+
+/* ADD BEGIN - 手持化改造：外部声明 */
+extern uint8_t ESP8266_IsConnected(void);
+extern void ESP8266_ConnectToAP(void);
+/* ADD END */
+
 Send_Setting send_settting;
-volatile int disconnect = 0;
+/* ADD BEGIN - 优化后的心跳与断线计数 */
+//volatile int disconnect = 0;
+
+#define HEARTBEAT_INTERVAL_MS   30000   /* 心跳间隔改为30秒（原60秒） */
+#define MAX_LOST_HEARTBEAT      3       /* 连续3次无响应判定断线（原10次） */
+
+volatile int lost_heartbeat = 0;        /* 替代原来的 disconnect */
+static uint32_t last_keepalive = 0;     /* 应用层保活计时（5分钟发送一次） */
+/* ADD END */
+
 volatile u8 search = 0;
 
 int main(void)
@@ -44,6 +60,11 @@ int main(void)
 
     memset(ID_temp, 0xFF, sizeof(ID_temp));
     Hardware_Init();				//初始化外围硬件
+
+    /*ADD BEGIN*/
+    // 插入临时调用,之后可删去
+    WIFI_SaveConfig("SSID", "password");
+	/*ADD END*/
 
     ESP8266_Init();					//初始化ESP8266
 
@@ -78,6 +99,29 @@ int main(void)
 
     while(1)
     {
+        /* ADD BEGIN - 定期检查 WiFi 连接，断开则自动重连（每10秒检查一次） */
+        static uint32_t last_wifi_check = 0;
+        if (GetTick() - last_wifi_check >= 10000) {
+            if (!ESP8266_IsConnected()) {
+                OLED_Clear();
+                OLED_ShowString(1, 1, "WiFi Lost!     ");
+                OLED_ShowString(2, 1, "Reconnecting...");
+                ESP8266_ConnectToAP();                /* 重连热点 */
+                /* 重连后需要重新建立 MQTT 连接 */
+                OLED_ShowString(3, 1, "MQTT Reconnect ");
+                while (Broker_Link()) {
+                    DelayXms(500);
+                }
+                Broker_Subscribe();
+                OLED_Clear();
+                OLED_ShowString(1, 1, "WiFi & MQTT OK ");
+                DelayXms(1000);
+                OLED_Clear();
+            }
+            last_wifi_check = GetTick();
+        }
+        /* ADD END */
+
         if(search)
         {
             /***********读卡中*************/
@@ -197,7 +241,8 @@ int main(void)
             flash_w_flag = -1;
         }
 
-        if(GetTick() - send_settting.time >= 60000 && !send_settting.send_reagy)
+        /* ADD BEGIN - 使用新心跳间隔和 lost_heartbeat */
+        /*if (GetTick() - send_settting.time >= 60000 && !send_settting.send_reagy)
         {
             Broker_Ping();
             send_settting.time = GetTick();
@@ -209,9 +254,24 @@ int main(void)
             send_settting.send_reagy = 0;
             disconnect++;
             ESP8266_Clear();
+        }*/
+        if (GetTick() - send_settting.time >= HEARTBEAT_INTERVAL_MS && !send_settting.send_reagy)
+        {
+            Broker_Ping();
+            send_settting.time = GetTick();
+            lost_heartbeat++;
         }
+        /* ADD END */
 
-        if(disconnect >= 10) //认为断连
+        /* ADD BEGIN - 应用层保活：每5分钟发送一次空消息，防止手机热点NAT超时 */
+        if (GetTick() - last_keepalive >= 300000) {
+            Broker_SendKeepAlive();   /* 此函数需要在 Broker.c 中实现 */
+            last_keepalive = GetTick();
+        }
+        /* ADD END */
+        
+        /* ADD BEGIN - 缩短断线判断阈值 */
+          /*if (disconnect >= 10) //认为断连
         {
             UsartPrintf(USART_DEBUG, "Disconnect\r\n");
             ESP8266_Init();
@@ -226,7 +286,25 @@ int main(void)
             UsartPrintf(USART_DEBUG, "Connect again\r\n");
             disconnect = 0;
             OLED_Clear();
+        }*/
+        if (lost_heartbeat >= MAX_LOST_HEARTBEAT) //认为断连
+        {
+            UsartPrintf(USART_DEBUG, "Disconnect\r\n");
+            ESP8266_Init();
+            Connect.cmd = Broker_Address;
+            Connect.res = "CONNECT";
+            Connect.debug = 0;
+            while (Broker_Link())			//接入OneNET
+            {
+                ESP8266_SendCmd(&Connect);
+                DelayXms(500);
+            }
+            UsartPrintf(USART_DEBUG, "Connect again\r\n");
+            lost_heartbeat = 0;   /* 重置计数 */
+            OLED_Clear();
         }
+        /* ADD END */
+      
         dataPtr = ESP8266_GetIPD(0);
         if(dataPtr != NULL)
             Broker_RevPro(dataPtr);

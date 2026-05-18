@@ -3,3 +3,11 @@ STM32/.vscode/keil-assistant.log
 STM32/.vscode/uv4.log.lock
 STM32/.vscode/c_cpp_properties.json
 .vscode/c_cpp_properties.json
+# 忽略 Visual Studio 本地自动生成的缓存与用户配置
+.vs/
+*.vsidx
+Build/
+Out/
+
+# 忽略 IDE 元数据缓存
+.metadata/
