@@ -2,7 +2,7 @@
 .\output\rfid.o: RFID\RFID.h
 .\output\rfid.o: .\core\stm32f10x.h
 .\output\rfid.o: .\core\core_cm3.h
-.\output\rfid.o: F:\keil5\ARM\ARMCC\Bin\..\include\stdint.h
+.\output\rfid.o: D:\keil\Keil MDK\core\ARM\ARMCC\Bin\..\include\stdint.h
 .\output\rfid.o: .\core\system_stm32f10x.h
 .\output\rfid.o: .\core\stm32f10x_conf.h
 .\output\rfid.o: .\fwlib\inc\stm32f10x_adc.h
@@ -30,5 +30,5 @@
 .\output\rfid.o: .\fwlib\inc\stm32f10x_wwdg.h
 .\output\rfid.o: .\fwlib\inc\misc.h
 .\output\rfid.o: .\hardware\inc\delay.h
-.\output\rfid.o: F:\keil5\ARM\ARMCC\Bin\..\include\string.h
+.\output\rfid.o: D:\keil\Keil MDK\core\ARM\ARMCC\Bin\..\include\string.h
 .\output\rfid.o: .\hardware\inc\usart.h

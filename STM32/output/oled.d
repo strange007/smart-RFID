@@ -1,7 +1,7 @@
 .\output\oled.o: OLED\OLED.c
 .\output\oled.o: .\core\stm32f10x.h
 .\output\oled.o: .\core\core_cm3.h
-.\output\oled.o: F:\keil5\ARM\ARMCC\Bin\..\include\stdint.h
+.\output\oled.o: D:\keil\Keil MDK\core\ARM\ARMCC\Bin\..\include\stdint.h
 .\output\oled.o: .\core\system_stm32f10x.h
 .\output\oled.o: .\core\stm32f10x_conf.h
 .\output\oled.o: .\fwlib\inc\stm32f10x_adc.h
