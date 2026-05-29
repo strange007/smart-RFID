@@ -3,12 +3,12 @@
 #include "string.h"
 #include "usart.h"
 
-u8 RFID_TxPacket[7];				//发送数据包数组:FF 01 02 03 04 FE
-u8 RFID_buf[512];				//接收数据包数组
-u32 RFID_cnt = 0, RFID_cntPre = 0;
-u8 RFID_RxFlag;					//接收数据包数组标志位
-u8 RFIDCard[12] = {0};
-int8_t RSSI = 0;
+u8 RFID_TxPacket[7];				     //发送数据包数组:FF 01 02 03 04 FE
+u8 RFID_buf[512];				         //接收数据包数组
+u32 RFID_cnt = 0, RFID_cntPre = 0;       //接收数据包数组计数器,上次接收数据包数组计数器
+u8 RFID_RxFlag;					         //接收数据包数组标志位
+u8 RFIDCard[12] = {0};                   //存储当前读到的标签EPC
+int8_t RSSI = 0;                         //存储当前读到的标签信号强度
 
 TagNode tagCache[TAG_CACHE_SIZE];
 
@@ -21,11 +21,11 @@ TagNode tagCache[TAG_CACHE_SIZE];
 #define RFID_POLL_INIT_MS     80        // 初始轮询间隔80ms
 
 // 动态轮询状态
-static uint32_t rfid_poll_interval_ms = RFID_POLL_INIT_MS;// 当前轮询间隔
-static uint32_t rfid_last_poll_tick = 0;// 上次发送轮询命令的时间
-static uint32_t rfid_last_hit_tick = 0;// 上次成功读到标签的时间
-static uint8_t rfid_hit_streak = 0;// 连续命中计数
-static uint8_t rfid_miss_streak = 0;// 连续未命中计数
+static uint32_t rfid_poll_interval_ms = RFID_POLL_INIT_MS;  // 当前轮询间隔
+static uint32_t rfid_last_poll_tick = 0;                    // 上次发送轮询命令的时间
+static uint32_t rfid_last_hit_tick = 0;                     // 上次成功读到标签的时间
+static uint8_t rfid_hit_streak = 0;                         // 连续命中计数
+static uint8_t rfid_miss_streak = 0;                        // 连续未命中计数
 
 //判断标签是否短时间重复读取
 uint8_t RFID_CheckDuplicate(uint8_t *epc, int8_t rssi)
