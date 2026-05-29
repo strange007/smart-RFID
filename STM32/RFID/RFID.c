@@ -10,7 +10,7 @@ u8 RFID_RxFlag;					         //接收数据包数组标志位
 u8 RFIDCard[12] = {0};                   //存储当前读到的标签EPC
 int8_t RSSI = 0;                         //存储当前读到的标签信号强度
 
-TagNode tagCache[TAG_CACHE_SIZE];
+TagNode tagCache[TAG_CACHE_SIZE];        // 标签缓存
 
 // 动态轮询参数（按现场读卡节奏可调）
 #define RFID_POLL_MIN_MS      30        // 最快30ms一次
@@ -42,7 +42,7 @@ uint8_t RFID_CheckDuplicate(uint8_t *epc, int8_t rssi)
         if(tagCache[i].valid &&
                 memcmp(tagCache[i].epc, epc, EPC_LEN) == 0)
         {
-            filtered_rssi = RSSI_Filter(tagCache[i].rssi, rssi);
+            filtered_rssi = RSSI_Filter(tagCache[i].rssi, rssi);// 更新滤波后的RSSI
             // 信号过弱,忽略
             if(filtered_rssi < RSSI_THRESHOLD_DEFAULT)
             {
@@ -201,13 +201,6 @@ void Serial_SendNumber(uint32_t Number, uint8_t Length)
 }
 
 
-
-/**
-  * 函  数:串口发送数据包
-  * 参  数:无
-  * 返回值:无
-  * 说  明:调用此函数后，Serial_TxPacket数组的内容加上包头包尾后，作为数据包发送出去
-  */
 
 /**
   * 函  数:向RFID发送单次轮询命令
