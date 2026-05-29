@@ -14,7 +14,9 @@
 #include <string.h>
 #include <stdio.h>
 
-#define ESP8266_WIFI_INFO		"AT+CWJAP=\"HiWiFi\",\"5555720720\",\"d4:ee:07:03:e7:54\"\r\n"
+/* CHANGE BEGIN */
+//#define ESP8266_WIFI_INFO		"AT+CWJAP=\"HiWiFi\",\"5555720720\",\"d4:ee:07:03:e7:54\"\r\n"
+/* CHANGE END */
 
 unsigned char esp8266_buf[512];
 unsigned short esp8266_cnt = 0, esp8266_cntPre = 0;
@@ -36,6 +38,76 @@ void ESP8266_Clear(void)
     memset(esp8266_buf, 0, sizeof(esp8266_buf));
     esp8266_cnt = 0;
 }
+
+/* ADD BEGIN - 动态连接热点（从FLASH读取SSID/密码） */
+
+/**
+  * @brief   连接至 FLASH 中保存的 WiFi 热点
+  * @param   无
+  * @retval  无
+  * @note    会尝试重试10次，每次间隔2秒；失败后 OLED 显示错误并进入死循环（可改为其他错误处理）
+  */
+void ESP8266_ConnectToAP(void)
+{
+    char ssid[33] = { 0 };
+    char pwd[33] = { 0 };
+    char cmd_buf[128];
+    uint8_t retry = 0;
+    ESP8266_CMD connectCmd;
+
+    /* 从 FLASH 读取 WiFi 配置 */
+    if (!WIFI_LoadConfig(ssid, pwd, 33)) {
+        OLED_Clear();
+        OLED_ShowString(1, 1, "No WiFi config!");
+        OLED_ShowString(2, 1, "Please set via");
+        OLED_ShowString(3, 1, "USB or UART");
+        while (1);  /* 停止执行，等待外部配置 */
+    }
+
+    /* 构造 AT+CWJAP 命令 */
+    sprintf(cmd_buf, "AT+CWJAP=\"%s\",\"%s\"\r\n", ssid, pwd);
+    connectCmd.cmd = cmd_buf;
+    connectCmd.res = "GOT IP";
+    connectCmd.debug = 1;   /* 调试输出到串口，便于观察 */
+
+    OLED_ShowString(4, 1, "Connecting WiFi ");
+    while (ESP8266_SendCmd(&connectCmd) && retry++ < 10) {
+        DelayXms(2000);
+        OLED_ShowString(4, 1, "Retry...       ");
+    }
+
+    if (retry >= 10) {
+        OLED_ShowString(4, 1, "WiFi Failed!   ");
+        while (1);  /* 连接失败，停止 */
+    }
+    else {
+        OLED_ShowString(4, 1, "WiFi Connected ");
+        DelayXms(500);
+    }
+}
+
+/**
+  * @brief   检查 ESP8266 是否已连接 AP
+  * @param   无
+  * @retval  1 - 已连接, 0 - 未连接
+  * @note    通过发送 AT+CWJAP? 并解析响应
+  */
+uint8_t ESP8266_IsConnected(void)
+{
+    ESP8266_CMD checkCmd;
+    checkCmd.cmd = "AT+CWJAP?\r\n";
+    checkCmd.res = "+CWJAP:\"";
+    checkCmd.debug = 0;
+
+    ESP8266_Clear();
+    if (ESP8266_SendCmd(&checkCmd) == 0) {
+        /* 找到 +CWJAP:" 说明已连接 */
+        return 1;
+    }
+    return 0;
+}
+/* ADD END */
+
 
 //==========================================================
 //	函数名称：	ESP8266_WaitRecive
@@ -231,14 +303,21 @@ void ESP8266_Init(void)
         DelayXms(500);
     }
 
+
+    /* ADD BEGIN - 替换为动态热点连接 */
 //    UsartPrintf(USART_DEBUG, "4. CWJAP\r\n");
-    OLED_ShowString(4, 1, "4.CWJAP...");
+/*  OLED_ShowString(4, 1, "4.CWJAP...");
     ESP8266_Connect.cmd = ESP8266_WIFI_INFO;
     ESP8266_Connect.res = "GOT IP";
     while(ESP8266_SendCmd(&ESP8266_Connect))
     {
         DelayXms(5000);
-    }
+    }*/
+
+    
+    OLED_ShowString(4, 1, "4.CWJAP...");
+    ESP8266_ConnectToAP();   /* 使用从FLASH读取配置的连接函数 */
+    /* ADD END */
 
     UsartPrintf(USART_DEBUG, "5. ESP8266 Init OK\r\n");
     OLED_Clear();
